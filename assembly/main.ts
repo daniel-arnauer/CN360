@@ -135,6 +135,43 @@ export function getUserProjects(): Array<Project> {
 }
 
 /**
+ * Create a new bid
+ */
+export function createBid(projectId: u64, offerId: u64): u64 {
+  // Project
+  const project = projectMapping.get(projectId)
+  if (project === null) {
+    return 0
+  }
+
+  // Find offer
+  let offer = null
+  for (let i: i32 = 0; i < project.offers.length; i++) {
+    if (project.offers[i].id === offerId) {
+      offer = project.offers[i]
+      break
+    }
+  }
+  if (offer === null) {
+    return 0
+  }
+
+  // Bid status
+  let currentlyFunded: u128 = u128.Zero
+  for (let i: i32 = 0; i < offer.bids.length; i++) {
+    currentlyFunded = u128.add(currentlyFunded, offer.bids[i].payedTokens)
+  }
+  // Currently funded
+  // Not fully funded yet
+  if (u128.sub(offer.price, currentlyFunded) < u128.Zero) {
+
+  }
+
+
+  return 5
+}
+
+/**
  * Get all available projects
  * @Todo: implement filtering
  * @return: Array of projects
