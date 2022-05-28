@@ -4,7 +4,7 @@ import HomeIcon from "@mui/icons-material/Home";
 import ProjectTable from "../components/ProjectTable";
 import { getProjects } from "../assets/js/near/utils";
 
-const ContractorOverview = ({ setCurrentPage }) => {
+const ContractorOverview = ({ setCurrentPage, currentPage }) => {
   const [openDialog, setOpenDialog] = useState(false);
   const [showProjects, setShowProjects] = useState(false);
   const [projects, setProjects] = useState([]);
@@ -17,15 +17,16 @@ const ContractorOverview = ({ setCurrentPage }) => {
 
   useEffect(() => {
     async function fetch() {
+      console.log("TRIGGERED");
       const projectResolved = await getProjects();
       const projectsWithOfferFromUser = projectResolved.filter((p) => {
-        return p.offer?.some((o) => o.contractor === accountId) || false;
+        return p.offers?.some((o) => o.contractor === accountId) || false;
       });
       console.log({ projectsWithOfferFromUser });
       setProjects(projectsWithOfferFromUser);
     }
     fetch().then(() => setShowProjects(true));
-  }, [setProjects, getProjects, accountId]);
+  }, [setProjects, getProjects, accountId, currentPage]);
 
   return (
     <>
