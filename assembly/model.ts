@@ -1,4 +1,4 @@
-import { context, u128, PersistentVector } from "near-sdk-as";
+import { context, u128 } from "near-sdk-as";
 
 export const DEFAULT_PROJECT_STATUS = ProjectStatus.WAITING_FOR_OFFER;
 
