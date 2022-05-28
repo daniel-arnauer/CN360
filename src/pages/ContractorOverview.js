@@ -8,11 +8,20 @@ const ContractorOverview = ({ setCurrentPage }) => {
   const [openDialog, setOpenDialog] = useState(false);
   const [showProjects, setShowProjects] = useState(false);
   const [projects, setProjects] = useState([]);
+  const [accountId, setAccountId] = useState("");
 
   useEffect(() => {
+    setAccountId(window?.walletConnection._authData.accountId);
+  }, [window.walletConnection]);
+
+  useEffect(() => {
+    console.log(window?.walletConnection);
     async function fetch() {
       const projectResolved = await getProjects();
-      setProjects(projectResolved);
+      const projectsWithOfferFromUser = projectResolved.filter((p) => {
+        return p.offer?.some((o) => o.contractor === accountId) || false;
+      });
+      setProjects(projectsWithOfferFromUser);
     }
     fetch().then(() => setShowProjects(true));
   }, [setProjects]);
