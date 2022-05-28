@@ -28,7 +28,7 @@ export async function initContract() {
       // View methods are read only. They don't modify the state, but usually return some value.
       viewMethods: ["getProjects"],
       // Change methods can modify the state. But you don't receive the returned value when called.
-      changeMethods: ["createProject"],
+      changeMethods: ["createProject", "createOffer"],
     }
   );
 }
@@ -48,7 +48,7 @@ export function login() {
 }
 
 export async function createProject({
-  area = 0,
+  area = "0",
   location = "",
   postCode = "",
   name = "",
@@ -64,4 +64,16 @@ export async function getProjects() {
   let projects = await window.contract.getProjects();
   console.log(projects);
   return projects;
+}
+
+export async function createOffer({
+  projectId = "",
+  price = "",
+  finishDate = "",
+}) {
+  let response = await window.contract.createOffer({
+    args: { projectId, price, finishDate },
+  });
+  console.log(response);
+  return response;
 }

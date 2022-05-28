@@ -24,6 +24,8 @@ export const VIEW_MODES = {
 const ProjectTable = ({ projects = [], viewMode = VIEW_MODES.ALL }) => {
   const [openOfferDialog, setOpenOfferDialog] = useState(false);
   const [openInvestDialog, setOpenInvestDialog] = useState(false);
+  const [currentID, setCurrentID] = useState("");
+
   console.log(projects);
   if (!Array.isArray(projects)) {
     console.log("is still fetching");
@@ -51,7 +53,7 @@ const ProjectTable = ({ projects = [], viewMode = VIEW_MODES.ALL }) => {
           <TableBody>
             {projects.map((row) => (
               <TableRow
-                key={row.name}
+                key={row.id}
                 sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
               >
                 <TableCell component="th" scope="row">
@@ -69,7 +71,10 @@ const ProjectTable = ({ projects = [], viewMode = VIEW_MODES.ALL }) => {
                       viewMode === VIEW_MODES.ALL) && (
                       <Button
                         variant="outlined"
-                        onClick={() => setOpenOfferDialog(true)}
+                        onClick={() => {
+                          setCurrentID(row.id);
+                          setOpenOfferDialog(true);
+                        }}
                         sx={{ margin: "5px" }}
                       >
                         Make an offer
@@ -92,7 +97,11 @@ const ProjectTable = ({ projects = [], viewMode = VIEW_MODES.ALL }) => {
           </TableBody>
         </Table>
       </TableContainer>
-      <MakeOfferDialog open={openOfferDialog} setOpen={setOpenOfferDialog} />
+      <MakeOfferDialog
+        open={openOfferDialog}
+        setOpen={setOpenOfferDialog}
+        projectId={currentID}
+      />
       <InvestDialog open={openInvestDialog} setOpen={setOpenInvestDialog} />
     </>
   );

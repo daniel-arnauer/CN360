@@ -12,7 +12,7 @@ import { createProject } from "../assets/js/near/utils";
 
 export default function AddOwnerProjectDialog({ open = false, setOpen }) {
   const [name, setName] = React.useState("");
-  const [area, setArea] = React.useState(0);
+  const [area, setArea] = React.useState("0");
   const [street, setStreet] = React.useState("");
   const [postCode, setPostCode] = React.useState("");
   const theme = useTheme();
@@ -21,7 +21,7 @@ export default function AddOwnerProjectDialog({ open = false, setOpen }) {
   React.useEffect(() => {
     if (!open) {
       setName("");
-      setArea(0);
+      setArea("0");
       setStreet("");
       setPostCode("");
     }
