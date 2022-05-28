@@ -54,6 +54,7 @@ const LandingPage = ({ setCurrentPage }) => {
           marginTop: "30px",
         }}
       >
+        <Typography variant="h6">All projects where I am involved</Typography>
         {showProjects && (
           <ProjectTable projects={projects} viewMode={VIEW_MODES.ALL} />
         )}

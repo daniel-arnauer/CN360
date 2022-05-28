@@ -26,7 +26,7 @@ const ContractorOverview = ({ setCurrentPage }) => {
         <IconButton onClick={() => setCurrentPage("landing")} aria-label="home">
           <HomeIcon sx={{ color: "white" }} />
         </IconButton>{" "}
-        Available projects
+        Available projects to make an offer
       </Typography>
 
       <Box
