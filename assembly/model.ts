@@ -40,16 +40,16 @@ export class Bid {
  */
 export const enum ProjectStatus {
   // Offers for the project from the contractor
-  WAITING_FOR_OFFER = 1,
+  WAITING_FOR_OFFER = 'WAITING_FOR_OFFER',
 
   // Project financing state
-  WAITING_FOR_FINANCING = 2,
+  WAITING_FOR_FINANCING = 'WAITING_FOR_FINANCING',
 
   // Until project is finished
-  WAITING_FOR_FINISHED_PROJECT = 3,
+  WAITING_FOR_FINISHED_PROJECT = 'WAITING_FOR_FINISHED_PROJECT',
 
   // Project is finished
-  DONE = 4
+  DONE = 'DONE'
 }
 
 /**
