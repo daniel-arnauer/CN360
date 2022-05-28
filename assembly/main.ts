@@ -163,9 +163,9 @@ export function createBid(projectId: u64, offerId: u64): u64 {
   }
   // Currently funded
   // Not fully funded yet
-  if (u128.sub(offer.price, currentlyFunded) < u128.Zero) {
+  /* if (u128.sub(offer.price, currentlyFunded) < u128.Zero) {
 
-  }
+  } */
 
 
   return 5
