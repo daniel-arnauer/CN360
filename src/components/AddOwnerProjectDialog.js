@@ -33,7 +33,7 @@ export default function AddOwnerProjectDialog({ open = false, setOpen }) {
     console.log(street);
     console.log(postCode);
     createProject({
-      area: "1",
+      area: area,
       location: street,
       postCode: postCode,
       name: name,

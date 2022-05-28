@@ -24,6 +24,13 @@ export const VIEW_MODES = {
 const ProjectTable = ({ projects = [], viewMode = VIEW_MODES.ALL }) => {
   const [openOfferDialog, setOpenOfferDialog] = useState(false);
   const [openInvestDialog, setOpenInvestDialog] = useState(false);
+  console.log(projects);
+  if (!Array.isArray(projects)) {
+    console.log("is still fetching");
+    return <div />;
+  }
+  console.log("finished");
+  console.log(projects);
   return (
     <>
       <TableContainer component={Paper}>
