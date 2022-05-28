@@ -19,9 +19,6 @@ export const userProjectMapping = new PersistentMap<string, Array<u64>>('user_pr
 // Stores all project Ids
 export const projectIds = new PersistentVector<u64>('project_ids')
 
-// Store offers projectId -> Offer
-export const offerMapping = new PersistentMap<u64, Array<Offer>>('offer')
-
 
 /**
  * Generates a new project ID (counter)
@@ -104,12 +101,7 @@ export function createOffer(projectId: u64, price: u128, finishDate: u64): u64 {
   const offerId = _getNewId()
 
   // Append offer to mapping
-  let offers = offerMapping.get(projectId)
-  if (offers === null) {
-    offers = new Array<Offer>();
-  }
-  offers.push(new Offer(offerId, price, finishDate, context.sender))
-  offerMapping.set(projectId, offers)
+  project.offers.push(new Offer(offerId, price, finishDate, context.sender))
 
   // Add status
   project.statusHistory.push(new StatusHistory(ProjectStatus.WAITING_FOR_FINANCING, context.blockIndex))
@@ -121,18 +113,6 @@ export function createOffer(projectId: u64, price: u128, finishDate: u64): u64 {
   _upsertUserProject(context.sender, projectId)
 
   return offerId
-}
-
-/**
- * Returns the offers
- * @return: Array of offers
- */
-export function getOffers(projectId: u64): Array<Offer> {
-  const offers = offerMapping.get(projectId)
-  if (offers === null) {
-    return new Array<Offer>()
-  }
-  return offers
 }
 
 
@@ -161,6 +141,7 @@ export function getUserProjects(): Array<Project> {
  * @return: id of the newly created bid
  */
 export function createBid(projectId: u64, offerId: u64): u64 {
+  assert(context.attachedDeposit > u128.Zero, 'Deposit must be greater than 0')
   // Project
   const project = projectMapping.get(projectId)
   if (project === null) {
@@ -169,48 +150,52 @@ export function createBid(projectId: u64, offerId: u64): u64 {
   }
 
   // Find offer
-  const offers = offerMapping.get(projectId)
-  if (offers === null) {
+  if (project.offers.length === 0) {
     logging.log('No offers for project')
     return 0
   }
-  let offer: Offer | null = null
-  for (let i: i32 = 0; i < offers.length; i++) {
-    if (offers[i].id === offerId) {
-      offer = offers[i]
+  const status = _getCurrentProjectStatus(project)
+  if (status !== ProjectStatus.WAITING_FOR_FINANCING) {
+    logging.log('Project is not in waiting for financing state')
+    return 0
+  }
+
+  let idx: i32 = -1
+  for (let i: i32 = 0; i < project.offers.length; i++) {
+    if (project.offers[i].id === offerId) {
+      idx = i
       break
     }
   }
-  if (offer === null) {
+  if (idx === -1) {
     logging.log('Offer does not exist')
     return 0
   }
 
   // Bid status
   let currentlyFunded: u128 = u128.Zero
-  for (let i: i32 = 0; i < offer.bids.length; i++) {
-    currentlyFunded = u128.add(currentlyFunded, offer.bids[i].payedTokens)
+  for (let i: i32 = 0; i < project.offers[idx].bids.length; i++) {
+    currentlyFunded = u128.add(currentlyFunded, project.offers[idx].bids[i].payedTokens)
   }
   // Currently funded
   // Not fully funded yet
-  const missingFunds = u128.sub(offer.price, currentlyFunded)
-  let thisBid = context.attachedDeposit
+  const missingFunds = u128.sub(project.offers[idx].price, currentlyFunded)
+  let thisBid: u128 = context.attachedDeposit
   // Fully funded
   if (thisBid >= missingFunds) {
     // Project is fully funded
-    project.statusHistory.push(new StatusHistory(ProjectStatus.WAITING_FOR_FINISHED_PROJECT, context.blockIndex))
+    project.statusHistory.push(new StatusHistory(ProjectStatus.DONE, context.blockIndex))
 
     // Project mapping
-    projectMapping.set(projectId, project)
     thisBid = missingFunds
   }
 
   const bidId = _getNewId()
   const bid = new Bid(context.sender, context.blockIndex, thisBid, bidId)
-  offer.bids.push(bid)
+  project.offers[idx].bids.push(bid)
 
   // Save
-  offerMapping.set(projectId, offers)
+  projectMapping.set(projectId, project)
 
   return bidId
 }

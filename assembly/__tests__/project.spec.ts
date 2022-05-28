@@ -1,14 +1,15 @@
 import {
   _getCurrentProjectStatus,
   _getNewId,
-  _upsertUserProject, createBid,
+  _upsertUserProject,
+  createBid,
   createOffer,
-  createProject, getOffers, getProjects, offerMapping,
-  PROJECT_ID_COUNTER_STORAGE_KEY, projectIds,
+  createProject,
+  PROJECT_ID_COUNTER_STORAGE_KEY,
   projectMapping,
   userProjectMapping
 } from '../main'
-import { logging, storage, u128, VMContext } from 'near-sdk-as'
+import { storage, u128, VMContext } from 'near-sdk-as'
 import { DEFAULT_PROJECT_STATUS, Offer, Project, ProjectStatus, StatusHistory } from '../model'
 
 describe('project', () => {
@@ -168,7 +169,6 @@ describe('project', () => {
     const DEFAULT_BLOCK_INDEX = 1
     beforeEach(() => {
       projectMapping.set(projectId, new Project(25, 'test', 'test', 'test', projectId, DEFAULT_BLOCK_INDEX))
-      offerMapping.set(projectId, new Array<Offer>())
       storage.set<u64>(PROJECT_ID_COUNTER_STORAGE_KEY, 1)
     })
     it('should create an offer', () => {
@@ -191,12 +191,15 @@ describe('project', () => {
       const offerId = createOffer(projectId, u128.One, 6868)
       expect(offerId).toStrictEqual(2, 'offer Id should be 2')
 
-      const offers = getOffers(projectId)
-      if (offers === null) {
-        expect(true).toStrictEqual(false, 'Should not happen - deleted entry')
+      const project = projectMapping.get(projectId)
+      if (project == null) {
+        expect(true).toStrictEqual(false, 'ERROR in getting project')
         return
       }
-      expect(offers.length).toStrictEqual(1, 'should have one offer')
+
+      expect(project.offers.length).toStrictEqual(1, 'should have one offer')
+      expect(project.offers[0].id).toStrictEqual(2, 'should have offer with id 2')
+      expect(project.offers[0].price).toStrictEqual(u128.One, 'should have offer with price 1')
     })
     it('should update the statusHistory correctly', () => {
       const offerId = createOffer(projectId, u128.One, 68)
@@ -245,16 +248,35 @@ describe('project', () => {
     beforeEach(() => {
       projectMapping.delete(projectId)
       const project = new Project(25, 'test', 'test', 'test', projectId, 1)
-      // project.offers.push(new Offer(offerId, u128.One, 68, tester))
-      const offers = new Array<Offer>()
-      offers.push(new Offer(offerId, u128.One, 68, tester))
-      offerMapping.set(projectId, offers)
+      project.offers.push(new Offer(offerId, u128.One, 68, tester))
 
       projectMapping.set(projectId, project)
       storage.set<u64>(PROJECT_ID_COUNTER_STORAGE_KEY, 2)
     })
+    it('should not create a bid if the project is not in the correct status', () => {
+      const project = projectMapping.get(projectId)
+      if (project == null) {
+        expect(true).toStrictEqual(false, 'ERROR in getting project')
+        return
+      }
+      project.statusHistory.push(new StatusHistory(ProjectStatus.DONE,  100))
+      projectMapping.set(projectId, project)
+
+      VMContext.setAttached_deposit(new u128(10000))
+      const bidId = createBid(projectId, offerId)
+
+      expect(bidId).toStrictEqual(0)
+    })
     it('Should the status to "WAITING_FOR_FINISHED_PROJECT" when fully funded', () => {
       VMContext.setAttached_deposit(new u128(10000))
+      const p = projectMapping.get(projectId)
+      if (p == null) {
+        expect(true).toStrictEqual(false, 'ERROR in getting project')
+        return
+      }
+      p.statusHistory.push(new StatusHistory(ProjectStatus.WAITING_FOR_FINANCING,  100))
+      projectMapping.set(projectId, p)
+
       const bidId = createBid(projectId, offerId)
       expect(bidId).toStrictEqual(3)
 
@@ -263,10 +285,10 @@ describe('project', () => {
         expect(true).toStrictEqual(false, 'ERROR in getting project')
         return
       }
-      expect(project.statusHistory.length).toStrictEqual(2)
+      expect(project.statusHistory.length).toStrictEqual(3)
       for (let i: i32 = 0; i < project.statusHistory.length; i++) {
         const status = project.statusHistory[i]
-        expect(status.status === ProjectStatus.DONE || status.status === ProjectStatus.WAITING_FOR_OFFER).toBeTruthy()
+        expect(status.status === ProjectStatus.DONE || status.status === DEFAULT_PROJECT_STATUS || status.status === ProjectStatus.WAITING_FOR_FINANCING).toBeTruthy()
       }
     })
   })

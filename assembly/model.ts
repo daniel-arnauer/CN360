@@ -114,6 +114,9 @@ export class Project {
   // Stores the history of status (latest entry [ordered by blockIndex] is the current status)
   statusHistory: Array<StatusHistory>;
 
+  // Stores offers
+  offers: Array<Offer>
+
   // Creator address
   creator: string;
 
@@ -127,6 +130,7 @@ export class Project {
     this.name = name;
     this.statusHistory = new Array<StatusHistory>();
     this.statusHistory.push(new StatusHistory(DEFAULT_PROJECT_STATUS, blockIndex));
+    this.offers = new Array<Offer>();
     this.creator = context.sender;
     this.id = id;
   }
