@@ -11,10 +11,6 @@ const OwnerOverview = ({ setCurrentPage }) => {
   const [showProjects, setShowProjects] = useState(false);
   const [projects, setProjects] = useState([]);
 
-  // useEffect(() => {
-  //   const projectResolved = getProjects();
-  //   setProjects(projectResolved);
-  // }, [setProjects]);
   useEffect(() => {
     async function fetch() {
       const projectResolved = await getProjects();

@@ -38,11 +38,9 @@ const ProjectTable = ({ projects = [], viewMode = VIEW_MODES.ALL }) => {
           <TableHead>
             <TableRow>
               <TableCell>Name</TableCell>
-              <TableCell align="right">Owner</TableCell>
-              <TableCell align="right">Status</TableCell>
-              <TableCell align="right">Street</TableCell>
-              <TableCell align="right">City</TableCell>
-              <TableCell align="right">Documents attached</TableCell>
+              <TableCell align="right">Creator</TableCell>
+              <TableCell align="right">Location</TableCell>
+              <TableCell align="right">PostCode</TableCell>
               {viewMode !== "owner" && (
                 <>
                   <TableCell align="right">Actions</TableCell>
@@ -59,17 +57,9 @@ const ProjectTable = ({ projects = [], viewMode = VIEW_MODES.ALL }) => {
                 <TableCell component="th" scope="row">
                   {row.name}
                 </TableCell>
-                <TableCell align="right">{row.owner}</TableCell>
-                <TableCell align="right">{row.status}</TableCell>
-                <TableCell align="right">{row.street}</TableCell>
-                <TableCell align="right">{row.city}</TableCell>
-                <TableCell align="right">
-                  {row.documentUploaded ? (
-                    <CheckCircleIcon />
-                  ) : (
-                    <DoDisturbAltIcon />
-                  )}
-                </TableCell>
+                <TableCell align="right">{row.creator}</TableCell>
+                <TableCell align="right">{row.location}</TableCell>
+                <TableCell align="right">{row.postCode}</TableCell>
 
                 {(viewMode === VIEW_MODES.CONTRACTOR ||
                   viewMode === VIEW_MODES.INVESTOR ||
