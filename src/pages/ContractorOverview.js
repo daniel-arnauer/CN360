@@ -39,7 +39,7 @@ const ContractorOverview = ({ setCurrentPage }) => {
         <Box>
           <Box
             sx={{
-              maxWidth: "80rem",
+              width: "50rem",
               marginTop: "30px",
             }}
           >

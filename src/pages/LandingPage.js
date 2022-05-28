@@ -48,16 +48,24 @@ const LandingPage = ({ setCurrentPage }) => {
           CONTRACTOR
         </Button>
       </Box>
+      <Typography variant="h6">All projects where I am involved</Typography>
       <Box
         sx={{
-          maxWidth: "80rem",
           marginTop: "30px",
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
         }}
       >
-        <Typography variant="h6">All projects where I am involved</Typography>
-        {showProjects && (
-          <ProjectTable projects={projects} viewMode={VIEW_MODES.ALL} />
-        )}
+        <Box
+          sx={{
+            width: "50rem",
+          }}
+        >
+          {showProjects && (
+            <ProjectTable projects={projects} viewMode={VIEW_MODES.ALL} />
+          )}
+        </Box>
       </Box>
     </>
   );
