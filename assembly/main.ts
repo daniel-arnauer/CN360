@@ -1,12 +1,8 @@
-import { Bid, messages, Offer, PostedMessage, Project, ProjectStatus, StatusHistory } from './model'
+import { Bid, Offer, Project, ProjectStatus, StatusHistory } from './model'
 import { context, logging, PersistentMap, PersistentVector, storage, u128 } from 'near-sdk-as'
 
 // --- contract code goes below
 
-// The maximum number of latest messages the contract returns.
-const MESSAGE_LIMIT = 10;
-
-export const CONTRACT_STORAGE_KEY = 'CHEAPEST_NEIGHBOR_CONTRACT'
 export const PROJECT_ID_COUNTER_STORAGE_KEY = 'PROJECT_ID_COUNTER'
 
 
