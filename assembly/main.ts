@@ -101,7 +101,13 @@ export function createOffer(projectId: u64, price: u128, finishDate: u64): u64 {
   const offerId = _getNewId()
 
   // Append offer to mapping
-  project.offers.push(new Offer(offerId, price, finishDate, context.sender))
+  const offer = new Offer(offerId, price, finishDate, context.sender)
+  if (project.offers === null) {
+    project.offers = new Array<Offer>()
+    project.offers.push(offer)
+  } else {
+    project.offers.push(offer)
+  }
 
   // Add status
   project.statusHistory.push(new StatusHistory(ProjectStatus.WAITING_FOR_FINANCING, context.blockIndex))
