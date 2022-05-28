@@ -8,29 +8,36 @@ import DialogTitle from "@mui/material/DialogTitle";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import { useTheme } from "@mui/material/styles";
 import TextField from "@mui/material/TextField";
+import { createProject } from "../assets/js/near/utils";
 
 export default function AddOwnerProjectDialog({ open = false, setOpen }) {
   const [name, setName] = React.useState("");
-  const [owner, setOwner] = React.useState("");
+  const [area, setArea] = React.useState(0);
   const [street, setStreet] = React.useState("");
-  const [city, setCity] = React.useState("");
+  const [postCode, setPostCode] = React.useState("");
   const theme = useTheme();
   const fullScreen = useMediaQuery(theme.breakpoints.down("md"));
 
   React.useEffect(() => {
     if (!open) {
       setName("");
-      setOwner("");
+      setArea(0);
       setStreet("");
-      setCity("");
+      setPostCode("");
     }
   }, [open]);
 
   const handleSubmit = () => {
     console.log(name);
-    console.log(owner);
+    console.log(area);
     console.log(street);
-    console.log(city);
+    console.log(postCode);
+    createProject({
+      area: "1",
+      location: street,
+      postCode: postCode,
+      name: name,
+    });
     setOpen(false);
   };
 
@@ -61,11 +68,11 @@ export default function AddOwnerProjectDialog({ open = false, setOpen }) {
             onChange={(e) => setName(e.target.value)}
           />
           <TextField
-            label="Owner"
+            label="Area"
             variant="outlined"
             sx={{ m: "5px" }}
-            value={owner}
-            onChange={(e) => setOwner(e.target.value)}
+            value={area}
+            onChange={(e) => setArea(e.target.value)}
           />
           <TextField
             label="Street"
@@ -78,8 +85,8 @@ export default function AddOwnerProjectDialog({ open = false, setOpen }) {
             label="City"
             variant="outlined"
             sx={{ m: "5px" }}
-            value={city}
-            onChange={(e) => setCity(e.target.value)}
+            value={postCode}
+            onChange={(e) => setPostCode(e.target.value)}
           />
         </DialogContent>
         <DialogActions>
