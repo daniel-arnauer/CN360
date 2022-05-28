@@ -28,10 +28,19 @@ export class BidHistory {
  */
 @nearBindgen
 export class Bid {
-  // History of bids that also represents ownership
-  history: Array<BidHistory>
-  constructor() {
-    this.history = new Array<BidHistory>();
+  // User's addresss
+  user: string
+
+  // Index of the block
+  blockIndex: u64
+
+  // Amount of payed tokens in that particular bid
+  payedTokens: u128
+
+  constructor(user: string, blockIndex: u64, payedTokens: u128) {
+    this.user = user;
+    this.blockIndex = blockIndex;
+    this.payedTokens = payedTokens;
   }
 }
 
