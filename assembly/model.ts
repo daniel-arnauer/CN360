@@ -28,6 +28,9 @@ export class BidHistory {
  */
 @nearBindgen
 export class Bid {
+  // Bid id
+  id: u64
+
   // User's addresss
   user: string
 
@@ -37,10 +40,11 @@ export class Bid {
   // Amount of payed tokens in that particular bid
   payedTokens: u128
 
-  constructor(user: string, blockIndex: u64, payedTokens: u128) {
+  constructor(user: string, blockIndex: u64, payedTokens: u128, bidId: u64) {
     this.user = user;
     this.blockIndex = blockIndex;
     this.payedTokens = payedTokens;
+    this.id = bidId;
   }
 }
 
@@ -49,16 +53,16 @@ export class Bid {
  */
 export const enum ProjectStatus {
   // Offers for the project from the contractor
-  WAITING_FOR_OFFER = 'WAITING_FOR_OFFER',
+  WAITING_FOR_OFFER = 1,
 
   // Project financing state
-  WAITING_FOR_FINANCING = 'WAITING_FOR_FINANCING',
+  WAITING_FOR_FINANCING = 2,
 
   // Until project is finished
-  WAITING_FOR_FINISHED_PROJECT = 'WAITING_FOR_FINISHED_PROJECT',
+  WAITING_FOR_FINISHED_PROJECT = 3,
 
   // Project is finished
-  DONE = 'DONE'
+  DONE = 4
 }
 
 /**
@@ -130,9 +134,6 @@ export class Project {
   // Stores the history of status (latest entry [ordered by blockIndex] is the current status)
   statusHistory: Array<StatusHistory>;
 
-  // Stores all the offers
-  offers: Array<Offer>;
-
   // Creator address
   creator: string;
 
@@ -146,7 +147,6 @@ export class Project {
     this.name = name;
     this.statusHistory = new Array<StatusHistory>();
     this.statusHistory.push(new StatusHistory(DEFAULT_PROJECT_STATUS, blockIndex));
-    this.offers = new Array<Offer>();
     this.creator = context.sender;
     this.id = id;
   }

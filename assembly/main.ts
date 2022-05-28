@@ -1,5 +1,5 @@
-import { messages, Offer, PostedMessage, Project, ProjectStatus, StatusHistory } from './model'
-import { context, PersistentMap, PersistentVector, storage, u128 } from 'near-sdk-as'
+import { Bid, messages, Offer, PostedMessage, Project, ProjectStatus, StatusHistory } from './model'
+import { context, logging, PersistentMap, PersistentVector, storage, u128 } from 'near-sdk-as'
 
 // --- contract code goes below
 
@@ -18,6 +18,9 @@ export const userProjectMapping = new PersistentMap<string, Array<u64>>('user_pr
 
 // Stores all project Ids
 export const projectIds = new PersistentVector<u64>('project_ids')
+
+// Store offers projectId -> Offer
+export const offerMapping = new PersistentMap<u64, Array<Offer>>('offer')
 
 
 /**
@@ -86,6 +89,7 @@ export function createOffer(projectId: u64, price: u128, finishDate: u64): u64 {
   // Get the project
   const project = projectMapping.get(projectId)
   if (project === null) {
+    logging.log('Project does not exist')
     return 0
   }
 
@@ -99,8 +103,13 @@ export function createOffer(projectId: u64, price: u128, finishDate: u64): u64 {
   // Create the new offer
   const offerId = _getNewId()
 
-  // Append offer
-  project.offers.push(new Offer(offerId, price, finishDate, context.sender))
+  // Append offer to mapping
+  let offers = offerMapping.get(projectId)
+  if (offers === null) {
+    offers = new Array<Offer>();
+  }
+  offers.push(new Offer(offerId, price, finishDate, context.sender))
+  offerMapping.set(projectId, offers)
 
   // Add status
   project.statusHistory.push(new StatusHistory(ProjectStatus.WAITING_FOR_FINANCING, context.blockIndex))
@@ -113,6 +122,19 @@ export function createOffer(projectId: u64, price: u128, finishDate: u64): u64 {
 
   return offerId
 }
+
+/**
+ * Returns the offers
+ * @return: Array of offers
+ */
+export function getOffers(projectId: u64): Array<Offer> {
+  const offers = offerMapping.get(projectId)
+  if (offers === null) {
+    return new Array<Offer>()
+  }
+  return offers
+}
+
 
 /**
  * Returns all user's available projects (requires filtering etc.)
@@ -136,23 +158,31 @@ export function getUserProjects(): Array<Project> {
 
 /**
  * Create a new bid
+ * @return: id of the newly created bid
  */
 export function createBid(projectId: u64, offerId: u64): u64 {
   // Project
   const project = projectMapping.get(projectId)
   if (project === null) {
+    logging.log('Project does not exist')
     return 0
   }
 
   // Find offer
-  let offer = null
-  for (let i: i32 = 0; i < project.offers.length; i++) {
-    if (project.offers[i].id === offerId) {
-      offer = project.offers[i]
+  const offers = offerMapping.get(projectId)
+  if (offers === null) {
+    logging.log('No offers for project')
+    return 0
+  }
+  let offer: Offer | null = null
+  for (let i: i32 = 0; i < offers.length; i++) {
+    if (offers[i].id === offerId) {
+      offer = offers[i]
       break
     }
   }
   if (offer === null) {
+    logging.log('Offer does not exist')
     return 0
   }
 
@@ -163,12 +193,20 @@ export function createBid(projectId: u64, offerId: u64): u64 {
   }
   // Currently funded
   // Not fully funded yet
-  /* if (u128.sub(offer.price, currentlyFunded) < u128.Zero) {
+  if (u128.sub(offer.price, currentlyFunded) < u128.Zero) {
+    // Project is fully funded
+    project.statusHistory.push(new StatusHistory(ProjectStatus.WAITING_FOR_FINISHED_PROJECT, context.blockIndex))
+  }
 
-  } */
+  const bidId = _getNewId()
+  const bid = new Bid(context.sender, context.blockIndex, context.attachedDeposit, bidId)
+  offer.bids.push(bid)
 
 
-  return 5
+  // Save
+  offerMapping.set(projectId, offers)
+
+  return bidId
 }
 
 /**

@@ -1,15 +1,15 @@
 import {
   _getCurrentProjectStatus,
   _getNewId,
-  _upsertUserProject,
+  _upsertUserProject, createBid,
   createOffer,
-  createProject,
-  PROJECT_ID_COUNTER_STORAGE_KEY,
+  createProject, getOffers, getProjects, offerMapping,
+  PROJECT_ID_COUNTER_STORAGE_KEY, projectIds,
   projectMapping,
   userProjectMapping
 } from '../main'
-import { storage, u128, VMContext } from 'near-sdk-as'
-import { DEFAULT_PROJECT_STATUS, Project, ProjectStatus, StatusHistory } from '../model'
+import { logging, storage, u128, VMContext } from 'near-sdk-as'
+import { DEFAULT_PROJECT_STATUS, Offer, Project, ProjectStatus, StatusHistory } from '../model'
 
 describe('project', () => {
 
@@ -113,7 +113,6 @@ describe('project', () => {
       expect(chainProject.postCode).toStrictEqual('TestingPost', 'post code should match')
       expect(chainProject.location).toStrictEqual('Testing', 'location should match')
       expect(chainProject.name).toStrictEqual('TestingName', 'name should match')
-      expect(chainProject.offers.length).toStrictEqual(0, 'offers should be empty')
       expect(chainProject.statusHistory.length).toStrictEqual(1, 'statusHistory should be empty')
       expect(chainProject.statusHistory[0].status).toStrictEqual(DEFAULT_PROJECT_STATUS, 'status should be default')
     })
@@ -169,25 +168,35 @@ describe('project', () => {
     const DEFAULT_BLOCK_INDEX = 1
     beforeEach(() => {
       projectMapping.set(projectId, new Project(25, 'test', 'test', 'test', projectId, DEFAULT_BLOCK_INDEX))
+      offerMapping.set(projectId, new Array<Offer>())
       storage.set<u64>(PROJECT_ID_COUNTER_STORAGE_KEY, 1)
+    })
+    it('should create an offer', () => {
+      const offer = new Offer(1, u128.One, 67, 'test')
+      expect(offer.id).toStrictEqual(1)
+      expect(offer.price).toStrictEqual(u128.One)
+      expect(offer.finishDate).toStrictEqual(67)
+      expect(offer.contractor).toStrictEqual('test')
+      const offerArray = new Array<Offer>();
+      offerArray.push(offer)
+      expect(offerArray.length).toStrictEqual(1)
+      expect(offerArray[0].id).toStrictEqual(1)
     })
     it('should create a new offer', () => {
       const offerId = createOffer(projectId, u128.One, 68)
       expect(offerId).toBeTruthy()
       expect(offerId).toStrictEqual(2, 'offer Id should be 2')
     })
-    it('should append the offer', () => {
-      const offerId = createOffer(projectId, u128.One, 68)
-      expect(offerId).toBeTruthy()
+    it('should add the offer', () => {
+      const offerId = createOffer(projectId, u128.One, 6868)
       expect(offerId).toStrictEqual(2, 'offer Id should be 2')
 
-      const project = projectMapping.get(projectId)
-      if (project == null) {
-        expect(true).toStrictEqual(false, 'ERROR in getting project')
+      const offers = getOffers(projectId)
+      if (offers === null) {
+        expect(true).toStrictEqual(false, 'Should not happen - deleted entry')
         return
       }
-      expect(project.offers.length).toStrictEqual(1, 'should have one offer')
-      expect(project.offers[0].id).toStrictEqual(offerId, 'offerId should match')
+      expect(offers.length).toStrictEqual(1, 'should have one offer')
     })
     it('should update the statusHistory correctly', () => {
       const offerId = createOffer(projectId, u128.One, 68)
@@ -214,6 +223,25 @@ describe('project', () => {
 
       const offerId = createOffer(projectId, u128.One, 68)
       expect(offerId).toStrictEqual(0)
+    })
+  })
+
+  describe('createBid', () => {
+    const projectId = 1;
+    const offerId = 2;
+    const tester = 'cheapnear.test'
+    beforeEach(() => {
+      projectMapping.delete(projectId)
+      const project = new Project(25, 'test', 'test', 'test', projectId, 1)
+      // project.offers.push(new Offer(offerId, u128.One, 68, tester))
+
+      projectMapping.set(projectId, project)
+      storage.set<u64>(PROJECT_ID_COUNTER_STORAGE_KEY, 2)
+    })
+    it('should create a new bid', () => {
+      VMContext.setAttached_deposit(u128.One)
+      const bidId = createBid(projectId, offerId)
+      expect(bidId).toBeTruthy()
     })
   })
 })
