@@ -26,7 +26,7 @@ const InvestorOverview = ({ setCurrentPage }) => {
         <IconButton onClick={() => setCurrentPage("landing")} aria-label="home">
           <HomeIcon sx={{ color: "white" }} />
         </IconButton>{" "}
-        Available projects to invest in
+        Projects where I invested (work in progress..)
       </Typography>
 
       <Box

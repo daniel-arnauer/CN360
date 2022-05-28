@@ -48,7 +48,7 @@ const LandingPage = ({ setCurrentPage }) => {
           CONTRACTOR
         </Button>
       </Box>
-      <Typography variant="h6">All projects where I am involved</Typography>
+      <Typography variant="h6">All projects</Typography>
       <Box
         sx={{
           marginTop: "30px",

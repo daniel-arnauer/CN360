@@ -44,7 +44,7 @@ const OwnerOverview = ({ setCurrentPage, currentPage }) => {
         <IconButton onClick={() => setCurrentPage("landing")} aria-label="home">
           <HomeIcon sx={{ color: "white" }} />
         </IconButton>{" "}
-        My issued projects
+        My owned projects
       </Typography>
 
       <Box
