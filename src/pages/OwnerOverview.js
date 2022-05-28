@@ -6,9 +6,10 @@ import AddOwnerProjectDialog from "../components/AddOwnerProjectDialog";
 
 import { getProjects } from "../assets/js/near/utils";
 
-const OwnerOverview = ({ setCurrentPage }) => {
+const OwnerOverview = ({ setCurrentPage, currentPage }) => {
   const [openDialog, setOpenDialog] = useState(false);
   const [showProjects, setShowProjects] = useState(false);
+  const [toggleRefresh, setToggleRefresh] = useState(false);
   const [projects, setProjects] = useState([]);
   const [accountId, setAccountId] = useState("");
 
@@ -17,15 +18,22 @@ const OwnerOverview = ({ setCurrentPage }) => {
   }, [window.walletConnection]);
 
   useEffect(() => {
+    console.log("projects owned");
+    console.log(projects);
+  }, [projects]);
+
+  useEffect(() => {
     async function fetch() {
       const projectResolved = await getProjects();
       const projectsOwnedByUser = projectResolved.filter(
-        (p) => p.contractor === accountId
+        (p) => p.creator === accountId
       );
+      console.log(accountId);
+      console.log(projectsOwnedByUser);
       setProjects(projectsOwnedByUser);
     }
     fetch().then(() => setShowProjects(true));
-  }, [setProjects]);
+  }, [setProjects, currentPage, accountId, getProjects, toggleRefresh]);
 
   return (
     <>
@@ -74,7 +82,12 @@ const OwnerOverview = ({ setCurrentPage }) => {
           </Box>
         </Box>
       </Box>
-      <AddOwnerProjectDialog open={openDialog} setOpen={setOpenDialog} />
+      <AddOwnerProjectDialog
+        open={openDialog}
+        setOpen={setOpenDialog}
+        setToggleRefresh={setToggleRefresh}
+        toggleRefresh={toggleRefresh}
+      />
     </>
   );
 };

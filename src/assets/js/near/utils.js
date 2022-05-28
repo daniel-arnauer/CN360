@@ -48,7 +48,7 @@ export function login() {
 }
 
 export async function createProject({
-  area = "0",
+  area = "1",
   location = "",
   postCode = "",
   name = "",

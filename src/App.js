@@ -3,10 +3,7 @@ import React, { useState, useEffect } from "react";
 
 import "./assets/css/global.css";
 
-import {
-  login,
-  logout
-} from "./assets/js/near/utils";
+import { login, logout } from "./assets/js/near/utils";
 import getConfig from "./assets/js/near/config";
 
 import LandingPage from "./pages/LandingPage";
@@ -98,13 +95,22 @@ export default function App() {
         <LandingPage setCurrentPage={setCurrentPage} />
       )}
       {currentPage === PAGE.INVESTOR_OVERVIEW && (
-        <InvestorOverview setCurrentPage={setCurrentPage} />
+        <InvestorOverview
+          setCurrentPage={setCurrentPage}
+          currentPage={currentPage}
+        />
       )}
       {currentPage === PAGE.OWNER_OVERVIEW && (
-        <OwnerOverview setCurrentPage={setCurrentPage} />
+        <OwnerOverview
+          setCurrentPage={setCurrentPage}
+          currentPage={currentPage}
+        />
       )}
       {currentPage === PAGE.CONTRACTOR_OVERVIEW && (
-        <ContractorOverview setCurrentPage={setCurrentPage} />
+        <ContractorOverview
+          setCurrentPage={setCurrentPage}
+          currentPage={currentPage}
+        />
       )}
 
       {showNotification && <Notification />}

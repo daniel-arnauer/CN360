@@ -10,9 +10,14 @@ import { useTheme } from "@mui/material/styles";
 import TextField from "@mui/material/TextField";
 import { createProject } from "../assets/js/near/utils";
 
-export default function AddOwnerProjectDialog({ open = false, setOpen }) {
+export default function AddOwnerProjectDialog({
+  open = false,
+  setOpen,
+  toggleRefresh,
+  setToggleRefresh,
+}) {
   const [name, setName] = React.useState("");
-  const [area, setArea] = React.useState("0");
+  const [area, setArea] = React.useState("1");
   const [street, setStreet] = React.useState("");
   const [postCode, setPostCode] = React.useState("");
   const theme = useTheme();
@@ -21,24 +26,25 @@ export default function AddOwnerProjectDialog({ open = false, setOpen }) {
   React.useEffect(() => {
     if (!open) {
       setName("");
-      setArea("0");
+      setArea("1");
       setStreet("");
       setPostCode("");
     }
   }, [open]);
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     console.log(name);
     console.log(area);
     console.log(street);
     console.log(postCode);
-    createProject({
+    await createProject({
       area: area,
       location: street,
       postCode: postCode,
       name: name,
     });
     setOpen(false);
+    setToggleRefresh(!toggleRefresh);
   };
 
   const handleClose = () => {

@@ -12,19 +12,20 @@ const ContractorOverview = ({ setCurrentPage }) => {
 
   useEffect(() => {
     setAccountId(window?.walletConnection._authData.accountId);
+    console.log(window?.walletConnection);
   }, [window.walletConnection]);
 
   useEffect(() => {
-    console.log(window?.walletConnection);
     async function fetch() {
       const projectResolved = await getProjects();
       const projectsWithOfferFromUser = projectResolved.filter((p) => {
         return p.offer?.some((o) => o.contractor === accountId) || false;
       });
+      console.log({ projectsWithOfferFromUser });
       setProjects(projectsWithOfferFromUser);
     }
     fetch().then(() => setShowProjects(true));
-  }, [setProjects]);
+  }, [setProjects, getProjects, accountId]);
 
   return (
     <>

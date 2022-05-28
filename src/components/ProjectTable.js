@@ -26,13 +26,10 @@ const ProjectTable = ({ projects = [], viewMode = VIEW_MODES.ALL }) => {
   const [openInvestDialog, setOpenInvestDialog] = useState(false);
   const [currentID, setCurrentID] = useState("");
 
-  console.log(projects);
   if (!Array.isArray(projects)) {
     console.log("is still fetching");
     return <div />;
   }
-  console.log("finished");
-  console.log(projects);
   return (
     <>
       <TableContainer component={Paper}>
