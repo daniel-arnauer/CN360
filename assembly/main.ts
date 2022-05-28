@@ -17,7 +17,7 @@ export const projectMapping = new PersistentMap<u64, Project>('project')
 export const userProjectMapping = new PersistentMap<string, Array<u64>>('user_project')
 
 // Stores all project Ids
-// export const projectIds = new PersistentVector<u64>('project_ids')
+export const projectIds = new PersistentVector<u64>('project_ids')
 
 
 /**
@@ -70,7 +70,7 @@ export function createProject(area: u64, location: string, postCode: string, nam
   _upsertUserProject(context.sender, projectId)
 
   // Add project id to project ids
-  // projectIds.push(projectId)
+  projectIds.push(projectId)
 
   return projectId
 }
@@ -119,7 +119,7 @@ export function createOffer(projectId: u64, price: u128, finishDate: u64): u64 {
  * @Todo: implement filtering etc.
  * @return: Array of projects
  */
-/* export function getUserProjects(): Array<Project> {
+export function getUserProjects(): Array<Project> {
   const userProjects = userProjectMapping.get(context.sender)
   if (userProjects === null || userProjects.length === 0) {
     return new Array<Project>()
@@ -132,14 +132,14 @@ export function createOffer(projectId: u64, price: u128, finishDate: u64): u64 {
     }
   }
   return projects
-} */
+}
 
 /**
  * Get all available projects
  * @Todo: implement filtering
  * @return: Array of projects
  */
-/* export function getProjects(): Array<Project> {
+export function getProjects(): Array<Project> {
   const projects = new Array<Project>();
   // Empty array
   if (projectIds.length === 0) {
@@ -153,7 +153,7 @@ export function createOffer(projectId: u64, price: u128, finishDate: u64): u64 {
     }
   }
   return projects
-} */
+}
 
 
 /**
