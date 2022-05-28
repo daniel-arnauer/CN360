@@ -16,7 +16,8 @@
     "test:unit": "yarn build:contract:debug && asp && jest",
     "test:integration": "yarn build:contract:debug && npm run test:integration:ts && npm run test:integration:rs",
     "test:integration:ts": "ava --verbose",
-    "test:integration:rs": "cd src/tests/integration-tests/rs && cargo run --example integration-tests"
+    "test:integration:rs": "cd src/tests/integration-tests/rs && cargo run --example integration-tests",
+    "install:mac": "npm install --save-dev --ignore-scripts near-sdk-as --legacy-peer-deps"
   },
   "devDependencies": {
     "@babel/core": "~7.18.2",
