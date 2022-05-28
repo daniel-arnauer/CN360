@@ -193,15 +193,21 @@ export function createBid(projectId: u64, offerId: u64): u64 {
   }
   // Currently funded
   // Not fully funded yet
-  if (u128.sub(offer.price, currentlyFunded) < u128.Zero) {
+  const missingFunds = u128.sub(offer.price, currentlyFunded)
+  let thisBid = context.attachedDeposit
+  // Fully funded
+  if (thisBid >= missingFunds) {
     // Project is fully funded
     project.statusHistory.push(new StatusHistory(ProjectStatus.WAITING_FOR_FINISHED_PROJECT, context.blockIndex))
+
+    // Project mapping
+    projectMapping.set(projectId, project)
+    thisBid = missingFunds
   }
 
   const bidId = _getNewId()
-  const bid = new Bid(context.sender, context.blockIndex, context.attachedDeposit, bidId)
+  const bid = new Bid(context.sender, context.blockIndex, thisBid, bidId)
   offer.bids.push(bid)
-
 
   // Save
   offerMapping.set(projectId, offers)

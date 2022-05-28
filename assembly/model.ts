@@ -2,27 +2,6 @@ import { context, u128, PersistentVector, PersistentMap } from "near-sdk-as";
 
 export const DEFAULT_PROJECT_STATUS = ProjectStatus.WAITING_FOR_OFFER;
 
-
-/**
- * Export BidHistory class that stores the transfer of ownership
- */
-@nearBindgen
-export class BidHistory {
-  // User's addresss
-  user: string
-
-  // Index of the block
-  blockIndex: u64
-
-  // Amount of payed tokens in that particular bid
-  payedTokens: u128
-
-  constructor(public owner: string) {
-    this.blockIndex = context.blockIndex
-    this.payedTokens = context.attachedDeposit
-  }
-}
-
 /**
  * Stores a single bid which then stores the history of ownership
  */
@@ -82,6 +61,7 @@ export class StatusHistory {
 /**
  * Represents a single offer (from contractor) that contains the bids from the users; the first offer that reaches a fully financed state wins.
  */
+@nearBindgen
 export class Offer {
   // Unique offer ID
   id: u64;

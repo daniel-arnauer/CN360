@@ -224,6 +224,18 @@ describe('project', () => {
       const offerId = createOffer(projectId, u128.One, 68)
       expect(offerId).toStrictEqual(0)
     })
+    it('should not create an offer if the project is not in the correct status', () => {
+      const project = projectMapping.get(projectId)
+      if (project == null) {
+        expect(true).toStrictEqual(false, 'ERROR in getting project')
+        return
+      }
+      project.statusHistory.push(new StatusHistory(ProjectStatus.DONE, DEFAULT_BLOCK_INDEX + 1))
+      projectMapping.set(projectId, project)
+
+      const offerId = createOffer(projectId, u128.One, 68)
+      expect(offerId).toStrictEqual(0)
+    })
   })
 
   describe('createBid', () => {
@@ -234,14 +246,28 @@ describe('project', () => {
       projectMapping.delete(projectId)
       const project = new Project(25, 'test', 'test', 'test', projectId, 1)
       // project.offers.push(new Offer(offerId, u128.One, 68, tester))
+      const offers = new Array<Offer>()
+      offers.push(new Offer(offerId, u128.One, 68, tester))
+      offerMapping.set(projectId, offers)
 
       projectMapping.set(projectId, project)
       storage.set<u64>(PROJECT_ID_COUNTER_STORAGE_KEY, 2)
     })
-    it('should create a new bid', () => {
-      VMContext.setAttached_deposit(u128.One)
+    it('Should the status to "WAITING_FOR_FINISHED_PROJECT" when fully funded', () => {
+      VMContext.setAttached_deposit(new u128(10000))
       const bidId = createBid(projectId, offerId)
-      expect(bidId).toBeTruthy()
+      expect(bidId).toStrictEqual(3)
+
+      const project = projectMapping.get(projectId)
+      if (project == null) {
+        expect(true).toStrictEqual(false, 'ERROR in getting project')
+        return
+      }
+      expect(project.statusHistory.length).toStrictEqual(2)
+      for (let i: i32 = 0; i < project.statusHistory.length; i++) {
+        const status = project.statusHistory[i]
+        expect(status.status === ProjectStatus.DONE || status.status === ProjectStatus.WAITING_FOR_OFFER).toBeTruthy()
+      }
     })
   })
 })
