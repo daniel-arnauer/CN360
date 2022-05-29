@@ -54,7 +54,7 @@ export default function MakeOfferDialog({ open = false, setOpen, projectId }) {
             label="Price"
             variant="outlined"
             sx={{ m: "5px" }}
-            onChange={(e) => setPrice(e.target.value)}
+            onChange={e => setPrice(e.target.value)}
           />
 
           <DatePicker

@@ -2,7 +2,6 @@ import React, { useState, useEffect } from "react";
 import { Box, Button, Typography } from "@mui/material";
 import { PAGE } from "../App";
 import ProjectTable, { VIEW_MODES } from "../components/ProjectTable";
-
 import { getProjects } from "../assets/js/near/utils";
 
 const LandingPage = ({ setCurrentPage }) => {
@@ -26,7 +25,7 @@ const LandingPage = ({ setCurrentPage }) => {
           display: "flex",
           justifyContent: "center",
           alignItems: "center",
-          gap: "20px",
+          gap: "20px"
         }}
       >
         <Button
@@ -54,12 +53,12 @@ const LandingPage = ({ setCurrentPage }) => {
           marginTop: "30px",
           display: "flex",
           justifyContent: "center",
-          alignItems: "center",
+          alignItems: "center"
         }}
       >
         <Box
           sx={{
-            width: "50rem",
+            width: "50rem"
           }}
         >
           {showProjects && (

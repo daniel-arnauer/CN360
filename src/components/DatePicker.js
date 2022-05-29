@@ -12,10 +12,10 @@ export default function DatePicker({ date = null, setDate, label = "", sx }) {
         <MuiDatePicker
           label={label}
           value={date}
-          onChange={(newValue) => {
+          onChange={newValue => {
             setDate(newValue);
           }}
-          renderInput={(params) => <TextField {...params} />}
+          renderInput={params => <TextField {...params} />}
         />
       </LocalizationProvider>
     </Box>

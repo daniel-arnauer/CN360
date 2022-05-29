@@ -5,24 +5,23 @@ import ProjectTable from "../components/ProjectTable";
 import { getProjects } from "../assets/js/near/utils";
 
 const ContractorOverview = ({ setCurrentPage, currentPage }) => {
-  const [openDialog, setOpenDialog] = useState(false);
   const [showProjects, setShowProjects] = useState(false);
   const [projects, setProjects] = useState([]);
   const [accountId, setAccountId] = useState("");
 
   useEffect(() => {
     setAccountId(window?.walletConnection._authData.accountId);
-    console.log(window?.walletConnection);
+    console.log("Current Wallet: " + window?.walletConnection);
   }, [window.walletConnection]);
 
   useEffect(() => {
     async function fetch() {
-      console.log("TRIGGERED");
+      console.log("fetching projects ...");
       const projectResolved = await getProjects();
-      const projectsWithOfferFromUser = projectResolved.filter((p) => {
-        return p.offers?.some((o) => o.contractor === accountId) || false;
+      const projectsWithOfferFromUser = projectResolved.filter(p => {
+        return p.offers?.some(o => o.contractor === accountId) || false;
       });
-      console.log({ projectsWithOfferFromUser });
+      console.log("projectsWithOfferFromUser: " + projectsWithOfferFromUser);
       setProjects(projectsWithOfferFromUser);
     }
     fetch().then(() => setShowProjects(true));
@@ -44,14 +43,14 @@ const ContractorOverview = ({ setCurrentPage, currentPage }) => {
         sx={{
           display: "flex",
           justifyContent: "center",
-          alignItems: "center",
+          alignItems: "center"
         }}
       >
         <Box>
           <Box
             sx={{
               width: "50rem",
-              marginTop: "30px",
+              marginTop: "30px"
             }}
           >
             {showProjects && (
@@ -62,7 +61,7 @@ const ContractorOverview = ({ setCurrentPage, currentPage }) => {
             sx={{
               display: "flex",
               justifyContent: "center",
-              alignItems: "center",
+              alignItems: "center"
             }}
           ></Box>
         </Box>

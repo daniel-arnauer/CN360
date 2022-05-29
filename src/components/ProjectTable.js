@@ -7,10 +7,6 @@ import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
 import Button from "@mui/material/Button";
-
-import CheckCircleIcon from "@mui/icons-material/CheckCircle";
-import DoDisturbAltIcon from "@mui/icons-material/DoDisturbAlt";
-
 import MakeOfferDialog from "./MakeOfferDialog";
 import InvestDialog from "./InvestDialog";
 
@@ -18,7 +14,7 @@ export const VIEW_MODES = {
   ALL: "all",
   OWNER: "owner",
   CONTRACTOR: "contractor",
-  INVESTOR: "investor",
+  INVESTOR: "investor"
 };
 
 const ProjectTable = ({ projects = [], viewMode = VIEW_MODES.ALL }) => {
@@ -48,7 +44,7 @@ const ProjectTable = ({ projects = [], viewMode = VIEW_MODES.ALL }) => {
             </TableRow>
           </TableHead>
           <TableBody>
-            {projects.map((row) => (
+            {projects.map(row => (
               <TableRow
                 key={row.id}
                 sx={{ "&:last-child td, &:last-child th": { border: 0 } }}

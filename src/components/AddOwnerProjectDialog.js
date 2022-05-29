@@ -14,7 +14,7 @@ export default function AddOwnerProjectDialog({
   open = false,
   setOpen,
   toggleRefresh,
-  setToggleRefresh,
+  setToggleRefresh
 }) {
   const [name, setName] = React.useState("");
   const [area, setArea] = React.useState("1");
@@ -41,7 +41,7 @@ export default function AddOwnerProjectDialog({
       area: area,
       location: street,
       postCode: postCode,
-      name: name,
+      name: name
     });
     setOpen(false);
     setToggleRefresh(!toggleRefresh);
@@ -71,28 +71,28 @@ export default function AddOwnerProjectDialog({
             variant="outlined"
             sx={{ m: "5px" }}
             value={name}
-            onChange={(e) => setName(e.target.value)}
+            onChange={e => setName(e.target.value)}
           />
           <TextField
             label="Area"
             variant="outlined"
             sx={{ m: "5px" }}
             value={area}
-            onChange={(e) => setArea(e.target.value)}
+            onChange={e => setArea(e.target.value)}
           />
           <TextField
             label="Street"
             variant="outlined"
             sx={{ m: "5px" }}
             value={street}
-            onChange={(e) => setStreet(e.target.value)}
+            onChange={e => setStreet(e.target.value)}
           />
           <TextField
             label="City"
             variant="outlined"
             sx={{ m: "5px" }}
             value={postCode}
-            onChange={(e) => setPostCode(e.target.value)}
+            onChange={e => setPostCode(e.target.value)}
           />
         </DialogContent>
         <DialogActions>

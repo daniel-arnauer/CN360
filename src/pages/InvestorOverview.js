@@ -5,7 +5,6 @@ import ProjectTable from "../components/ProjectTable";
 import { getProjects } from "../assets/js/near/utils";
 
 const InvestorOverview = ({ setCurrentPage }) => {
-  const [openDialog, setOpenDialog] = useState(false);
   const [showProjects, setShowProjects] = useState(false);
   const [projects, setProjects] = useState([]);
 
@@ -33,14 +32,14 @@ const InvestorOverview = ({ setCurrentPage }) => {
         sx={{
           display: "flex",
           justifyContent: "center",
-          alignItems: "center",
+          alignItems: "center"
         }}
       >
         <Box>
           <Box
             sx={{
               width: "50rem",
-              marginTop: "30px",
+              marginTop: "30px"
             }}
           >
             {showProjects && (
@@ -51,7 +50,7 @@ const InvestorOverview = ({ setCurrentPage }) => {
             sx={{
               display: "flex",
               justifyContent: "center",
-              alignItems: "center",
+              alignItems: "center"
             }}
           ></Box>
         </Box>

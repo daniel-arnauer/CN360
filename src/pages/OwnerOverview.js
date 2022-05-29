@@ -18,7 +18,7 @@ const OwnerOverview = ({ setCurrentPage, currentPage }) => {
   }, [window.walletConnection]);
 
   useEffect(() => {
-    console.log("projects owned");
+    console.log("projects owned: ");
     console.log(projects);
   }, [projects]);
 
@@ -26,10 +26,8 @@ const OwnerOverview = ({ setCurrentPage, currentPage }) => {
     async function fetch() {
       const projectResolved = await getProjects();
       const projectsOwnedByUser = projectResolved.filter(
-        (p) => p.creator === accountId
+        p => p.creator === accountId
       );
-      console.log(accountId);
-      console.log(projectsOwnedByUser);
       setProjects(projectsOwnedByUser);
     }
     fetch().then(() => setShowProjects(true));
@@ -51,14 +49,14 @@ const OwnerOverview = ({ setCurrentPage, currentPage }) => {
         sx={{
           display: "flex",
           justifyContent: "center",
-          alignItems: "center",
+          alignItems: "center"
         }}
       >
         <Box>
           <Box
             sx={{
               width: "50rem",
-              marginTop: "30px",
+              marginTop: "30px"
             }}
           >
             {showProjects && (
@@ -69,7 +67,7 @@ const OwnerOverview = ({ setCurrentPage, currentPage }) => {
             sx={{
               display: "flex",
               justifyContent: "center",
-              alignItems: "center",
+              alignItems: "center"
             }}
           >
             <Button
