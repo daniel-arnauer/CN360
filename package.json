@@ -31,7 +31,7 @@
     "babel-jest": "^27.4.2",
     "buffer": "^6.0.3",
     "eslint": "^7.20.0",
-    "eslint-config-prettier": "^6.4.0",
+    "eslint-config-prettier": "^8.6.0",
     "eslint-config-react-app": "^6.0.0",
     "eslint-plugin-flowtype": "^5.2.0",
     "eslint-plugin-import": "^2.22.1",
