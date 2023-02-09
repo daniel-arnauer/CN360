@@ -43,7 +43,7 @@
     "jest-environment-node": "^26.6.2",
     "near-cli": "^3.0.0",
     "near-sdk-as": "^3.2.3",
-    "near-workspaces": "^2.0.0",
+    "near-workspaces": "^3.3.0",
     "nodemon": "^2.0.7",
     "parcel": "^2.6.0",
     "prettier": "1.19.1",
