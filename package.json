@@ -21,7 +21,7 @@
     "install:mac": "npm install --save-dev --ignore-scripts near-sdk-as --legacy-peer-deps"
   },
   "devDependencies": {
-    "@babel/core": "~7.18.2",
+    "@babel/core": "~7.21.0",
     "@babel/preset-env": "~7.18.2",
     "@babel/preset-react": "~7.17.12",
     "@typescript-eslint/eslint-plugin": "^4.22.1",
